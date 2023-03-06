@@ -1,6 +1,6 @@
 'use strict'
 
-const URLRooter = 'https://api.thecatapi.com/v1/images/search?limit=4'
+const URLRooter = 'https://api.thecatapi.com/v1/images/search?api_key=live_rltugyOJ3NfZE8VnfH0SDUGWPJMFa65AWqYpySVRVVK9YufsGVqR9V8WZYVXNyfL&limit=4'
 const querisParameters = ['limit=4']
 
 
