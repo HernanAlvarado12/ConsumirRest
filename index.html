@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang ="es">
+
+    <head>
+        <meta charset ="UTF-8">
+        <title>API REST Javascript</title>
+        <meta name ="description" content ="Project for learn of topic REST">
+        <meta name ="viewport" content ="width=device-width, initial-scale=1.0">
+        <meta name ="keywords" content ="html, css, tailwindcss, js">
+        <meta name ="robots" content ="index, follow">
+        <meta name ="author" content ="Hernan Alvarado">
+        <meta name ="copyright" content ="Hernan Alvarado">
+        <meta http-equiv ="cache-control" content ="no-cache">
+        <meta property ="og:title" content ="API Rest">
+        <meta property ="og:description" content ="Restful">
+        <meta property ="og:image" content ="link">
+        <link rel ="shortcut icon" href ="favicon.ico" type ="image/x-icon">
+        <link rel ="stylesheet" href ="./css/tailwind.css">
+    </head>
+
+    <body>
+        <main>
+            <h1 class ="mt-3 mb-1 text-lg font-bold text-center">Anime Chan API</h1>
+            <section>
+                <section class ="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4" id ="sectionImage">
+                    <template id ="imageTemplate">
+                        <figure>
+                            <img class ="w-full aspect-square" id ="imageCat" alt ="cat image" draggable ="false" loading ="lazy">
+                        </figure>
+                    </template>
+                </section>
+                <button class ="w-10 h-4 text-white text-sm font-bold border rounded-sm bg-cyan-300" id ="refresh">Refresh</button>
+            </section>
+        </main>
+
+        <script src ="./model.js"></script>
+    </body>
+
+</html>
