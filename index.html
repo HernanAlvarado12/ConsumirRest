@@ -29,7 +29,15 @@
                     </figure>
                 </template>
             </section>
-            <button class ="w-10 h-4 mx-auto mt-3 grid place-content-center text-white text-sm font-bold border rounded-sm bg-cyan-300" id ="refresh">Refresh</button>
+            <button class ="w-10 h-4 mx-auto my-3 grid place-content-center text-white text-sm font-bold border rounded-sm bg-cyan-300" id ="refresh">Refresh</button>
+            <section class ="grid grid-cols-2 gap-0.5 md:grid-cols-3 lg:grid-cols-4" id ="sectionFavorite">
+                <template id ="favoriteTemplate">
+                    <figure class ="relative">
+                        <img class ="w-full aspect-square" id ="imageCat" alt ="cat image" draggable ="false" loading ="lazy">
+                        <button class ="w-[15rem] h-4 mx-auto text-xs font-bold absolute bottom-1 inset-x-0 border border-black bg-white" id ="addFavorite">Add to favorite</button>
+                    </figure>
+                </template>
+            </section>
         </main>
         <script src ="./model.js" type ="module"></script>
     </body>

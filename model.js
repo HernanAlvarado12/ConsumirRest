@@ -19,8 +19,7 @@ document.addEventListener('click', event => {
         loadImage()
     }else if(target.matches('button#addFavorite')) {
         const previousElement = target.previousElementSibling
-        saveFavoriteImage()
-        console.log('fin')
+        saveFavoriteImage(previousElement.getAttribute('data-id'))
     }
 })
 document.addEventListener('DOMContentLoaded', loadImage)
@@ -46,27 +45,23 @@ function loadImage() {
  */
 function loadFavoriteImages() {
     fetch(typeRequest.FAVORITES)
-        .then(response => console.log(response))
+        .then(response => response.json())
+        .then(x => console.log(x))
 }
-loadFavoriteImages()
 
 
 /**
- * @param {}
+ * @param {String} imagePath
  * @returns {void}
  */
-function saveFavoriteImage(idImage) {
+function saveFavoriteImage(imagePath) {
     const body = JSON.stringify({
-        'image_id': 'dje'
+        'image_id': imagePath
     })
     fetch(typeRequest.FAVORITES, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            image_id: 'e4b'
-        })
+        headers: {'Content-Type': 'application/json' },
+        body
     })
     .then(json => console.log(json))
     .catch(error => console.log(error))
@@ -97,10 +92,15 @@ function cleanNodes(parentNode) {
  */
 function loadImageTemplate(arrayJson, { templateContent = '', documentFragment = '', parentInsert = '' }) {
     arrayJson.forEach(element => {
-        //console.log(element)
+        const { url, id } = element
         const cloneNode = document.importNode(templateContent, true)
-        cloneNode.querySelector('img').setAttribute('src', element.url)  
+        const image = cloneNode.querySelector('img')
+        image.setAttribute('src', url)  
+        image.setAttribute('data-id', id)
         documentFragment.append(cloneNode)
     })
     parentInsert.appendChild(documentFragment);
 }
+
+
+//loadFavoriteImages()
