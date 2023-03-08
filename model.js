@@ -7,6 +7,7 @@ const API_KEY = 'api_key=live_rltugyOJ3NfZE8VnfH0SDUGWPJMFa65AWqYpySVRVVK9YufsGV
 const typeRequest = {
     DEFAULT: `${URLRooter}/images/search?${API_KEY}&limit=4`,
     FAVORITES: `${URLRooter}/favourites?${API_KEY}`,
+    DELETE: (id) => `${URLRooter}/favourites/${id}?${API_KEY}`
 }
 
 
@@ -20,9 +21,17 @@ document.addEventListener('click', event => {
     }else if(target.matches('button#addFavorite')) {
         const previousElement = target.previousElementSibling
         saveFavoriteImage(previousElement.getAttribute('data-id'))
+    }else if(target.matches('button#deleteFavorite')) {
+        const previousElement = target.previousElementSibling
+        deleteFavoriteImage(previousElement.getAttribute('data-id'))
     }
 })
-document.addEventListener('DOMContentLoaded', loadImage)
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadImage()
+    loadFavoriteImages()
+})
 
 
 /**
@@ -44,9 +53,13 @@ function loadImage() {
  * @returns {void}
  */
 function loadFavoriteImages() {
+    const parentNode = document.getElementById('sectionFavorite')
+    const documentFragment = document.createDocumentFragment()
+    const imageTemplate = document.getElementById('favoriteTemplate').content
     fetch(typeRequest.FAVORITES)
         .then(response => response.json())
-        .then(x => console.log(x))
+        .then(json => loadImageTemplate(json, { templateContent: imageTemplate, documentFragment, parentInsert: parentNode }))
+        .catch(error => console.log(error))
 }
 
 
@@ -55,16 +68,27 @@ function loadFavoriteImages() {
  * @returns {void}
  */
 function saveFavoriteImage(imagePath) {
-    const body = JSON.stringify({
-        'image_id': imagePath
-    })
     fetch(typeRequest.FAVORITES, {
         method: 'POST',
         headers: {'Content-Type': 'application/json' },
-        body
+        body: JSON.stringify({
+            'image_id': imagePath
+        })         
     })
-    .then(json => console.log(json))
+    .then(json => json.json())
     .catch(error => console.log(error))
+}
+
+
+/**
+ * @param {String} idImage
+ * @returns {void}
+ */
+function deleteFavoriteImage(idImage) {
+    fetch(typeRequest.DELETE(idImage), { method: 'DELETE' })
+        .then(json => json.json())
+        .catch(error => console.log(error))
+
 }
 
 
@@ -90,17 +114,15 @@ function cleanNodes(parentNode) {
  * @property {DocumentFragment} documentFragment
  * @property {Element} parentInsert
  */
-function loadImageTemplate(arrayJson, { templateContent = '', documentFragment = '', parentInsert = '' }) {
+function loadImageTemplate(arrayJson, { templateContent, documentFragment , parentInsert }) {
     arrayJson.forEach(element => {
-        const { url, id } = element
+        const { image: { url = null ?? (element.url) } = {}, id } = element
         const cloneNode = document.importNode(templateContent, true)
         const image = cloneNode.querySelector('img')
-        image.setAttribute('src', url)  
+        image.setAttribute('src', url ?? '')  
         image.setAttribute('data-id', id)
         documentFragment.append(cloneNode)
     })
     parentInsert.appendChild(documentFragment);
 }
 
-
-//loadFavoriteImages()
