@@ -19,11 +19,10 @@ document.addEventListener('click', event => {
     if(target.matches('#refresh')) {
         loadImage()
     }else if(target.matches('button#addFavorite')) {
-        const previousElement = target.previousElementSibling
-        saveFavoriteImage(previousElement.getAttribute('data-id'))
+        console.log('Favorite')
+        saveFavoriteImage(target.getAttribute('data-id'))
     }else if(target.matches('button#deleteFavorite')) {
-        const previousElement = target.previousElementSibling
-        deleteFavoriteImage(previousElement.getAttribute('data-id'))
+        deleteFavoriteImage(target.getAttribute('data-id'))
     }
 })
 
@@ -56,6 +55,7 @@ function loadFavoriteImages() {
     const parentNode = document.getElementById('sectionFavorite')
     const documentFragment = document.createDocumentFragment()
     const imageTemplate = document.getElementById('favoriteTemplate').content
+    cleanNodes(parentNode)
     fetch(typeRequest.FAVORITES)
         .then(response => response.json())
         .then(json => loadImageTemplate(json, { templateContent: imageTemplate, documentFragment, parentInsert: parentNode }))
@@ -76,6 +76,7 @@ function saveFavoriteImage(imagePath) {
         })         
     })
     .then(json => json.json())
+    .then(loadFavoriteImages)
     .catch(error => console.log(error))
 }
 
@@ -86,9 +87,8 @@ function saveFavoriteImage(imagePath) {
  */
 function deleteFavoriteImage(idImage) {
     fetch(typeRequest.DELETE(idImage), { method: 'DELETE' })
-        .then(json => json.json())
+        .then(loadFavoriteImages)
         .catch(error => console.log(error))
-
 }
 
 
@@ -118,9 +118,8 @@ function loadImageTemplate(arrayJson, { templateContent, documentFragment , pare
     arrayJson.forEach(element => {
         const { image: { url = null ?? (element.url) } = {}, id } = element
         const cloneNode = document.importNode(templateContent, true)
-        const image = cloneNode.querySelector('img')
-        image.setAttribute('src', url ?? '')  
-        image.setAttribute('data-id', id)
+        cloneNode.querySelector('img').setAttribute('src', url)  
+        cloneNode.querySelector('button').setAttribute('data-id', id)
         documentFragment.append(cloneNode)
     })
     parentInsert.appendChild(documentFragment);
