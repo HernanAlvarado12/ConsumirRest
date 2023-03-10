@@ -1,13 +1,13 @@
 'use strict'
 
 const URLRooter = 'https://api.thecatapi.com/v1'
-const API_KEY = 'api_key=live_rltugyOJ3NfZE8VnfH0SDUGWPJMFa65AWqYpySVRVVK9YufsGVqR9V8WZYVXNyfL'
+const API_KEY = 'live_rltugyOJ3NfZE8VnfH0SDUGWPJMFa65AWqYpySVRVVK9YufsGVqR9V8WZYVXNyfL'
 
 
 const typeRequest = {
-    DEFAULT: `${URLRooter}/images/search?${API_KEY}&limit=4`,
-    FAVORITES: `${URLRooter}/favourites?${API_KEY}`,
-    DELETE: (id) => `${URLRooter}/favourites/${id}?${API_KEY}`
+    DEFAULT: `${URLRooter}/images/search?limit=4`,
+    FAVORITES: `${URLRooter}/favourites`,
+    DELETE: (id) => `${URLRooter}/favourites/${id}`
 }
 
 
@@ -19,7 +19,6 @@ document.addEventListener('click', event => {
     if(target.matches('#refresh')) {
         loadImage()
     }else if(target.matches('button#addFavorite')) {
-        console.log('Favorite')
         saveFavoriteImage(target.getAttribute('data-id'))
     }else if(target.matches('button#deleteFavorite')) {
         deleteFavoriteImage(target.getAttribute('data-id'))
@@ -41,7 +40,7 @@ function loadImage() {
     const documentFragment = document.createDocumentFragment()
     const imageTemplate = document.getElementById('imageTemplate').content
     cleanNodes(parentNode)
-    fetch(typeRequest.DEFAULT)
+    fetch(typeRequest.DEFAULT, { method: 'GET', headers: { 'X-API-KEY': API_KEY } })
         .then(response => response.json())
         .then(json => loadImageTemplate(json, { templateContent: imageTemplate, documentFragment, parentInsert: parentNode }))
         .catch(error => console.log(`Ha ocurrido un error de tipo ${error}`))
@@ -56,7 +55,7 @@ function loadFavoriteImages() {
     const documentFragment = document.createDocumentFragment()
     const imageTemplate = document.getElementById('favoriteTemplate').content
     cleanNodes(parentNode)
-    fetch(typeRequest.FAVORITES)
+    fetch(typeRequest.FAVORITES, { method: 'GET', headers: { 'X-API-KEY': API_KEY } })
         .then(response => response.json())
         .then(json => loadImageTemplate(json, { templateContent: imageTemplate, documentFragment, parentInsert: parentNode }))
         .catch(error => console.log(error))
@@ -70,7 +69,7 @@ function loadFavoriteImages() {
 function saveFavoriteImage(imagePath) {
     fetch(typeRequest.FAVORITES, {
         method: 'POST',
-        headers: {'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-API-KEY': API_KEY },
         body: JSON.stringify({
             'image_id': imagePath
         })         
@@ -86,7 +85,7 @@ function saveFavoriteImage(imagePath) {
  * @returns {void}
  */
 function deleteFavoriteImage(idImage) {
-    fetch(typeRequest.DELETE(idImage), { method: 'DELETE' })
+    fetch(typeRequest.DELETE(idImage), { method: 'DELETE', headers: { 'X-API-KEY': API_KEY } })
         .then(loadFavoriteImages)
         .catch(error => console.log(error))
 }
@@ -106,13 +105,13 @@ function cleanNodes(parentNode) {
 
 
 /**
- * 
- * @param {Array<Object>} arrayJson 
- * @param {appendItemsTemplate} appendItemsTemplate
  * @typedef {Object} appendItemsTemplate
  * @property {Element} imageTemplate
  * @property {DocumentFragment} documentFragment
  * @property {Element} parentInsert
+ * @param {Array<Object>} arrayJson 
+ * @param {appendItemsTemplate} appendItemsTemplate
+ * @returns {void}
  */
 function loadImageTemplate(arrayJson, { templateContent, documentFragment , parentInsert }) {
     arrayJson.forEach(element => {
