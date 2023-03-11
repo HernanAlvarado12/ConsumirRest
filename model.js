@@ -7,21 +7,25 @@ const API_KEY = 'live_rltugyOJ3NfZE8VnfH0SDUGWPJMFa65AWqYpySVRVVK9YufsGVqR9V8WZY
 const typeRequest = {
     DEFAULT: `${URLRooter}/images/search?limit=4`,
     FAVORITES: `${URLRooter}/favourites`,
-    DELETE: (id) => `${URLRooter}/favourites/${id}`
+    DELETE: (id) => `${URLRooter}/favourites/${id}`,
+    UPLOAD: `${URLRooter}/images/upload`
 }
 
 
 document.addEventListener('click', event => {
     /**
      * @type {Element}
-     */
-    const target = event.target
-    if(target.matches('#refresh')) {
-        loadImage()
+    */
+   const target = event.target
+   if(target.matches('#refresh')) {
+       loadImage()
     }else if(target.matches('button#addFavorite')) {
         saveFavoriteImage(target.getAttribute('data-id'))
     }else if(target.matches('button#deleteFavorite')) {
         deleteFavoriteImage(target.getAttribute('data-id'))
+    }else if(target.matches('#formSubmit')) {
+        event.preventDefault()
+        uploadPhoto()
     }
 })
 
@@ -88,6 +92,18 @@ function deleteFavoriteImage(idImage) {
     fetch(typeRequest.DELETE(idImage), { method: 'DELETE', headers: { 'X-API-KEY': API_KEY } })
         .then(loadFavoriteImages)
         .catch(error => console.log(error))
+}
+
+
+async function uploadPhoto() {
+    const form = document.getElementById('formUpload')
+    const formData = new FormData(form);
+    formData.forEach(entry => console.log(`key: ${entry}`))
+    fetch(typeRequest.UPLOAD, {
+        method: 'POST',
+        headers: { 'Content-Type': 'multipart/form-data', 'X-API-KEY': API_KEY },
+        body: formData
+    })
 }
 
 

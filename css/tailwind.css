@@ -532,20 +532,9 @@ html {
   position: relative;
 }
 
-.inset-0 {
-  top: 0px;
-  right: 0px;
-  bottom: 0px;
-  left: 0px;
-}
-
 .inset-x-0 {
   left: 0px;
   right: 0px;
-}
-
-.bottom-0 {
-  bottom: 0px;
 }
 
 .bottom-1 {
@@ -578,6 +567,10 @@ html {
   aspect-ratio: 1 / 1;
 }
 
+.h-3 {
+  height: 3rem;
+}
+
 .h-4 {
   height: 4rem;
 }
@@ -586,12 +579,12 @@ html {
   width: 10rem;
 }
 
-.w-full {
-  width: 100%;
-}
-
 .w-\[15rem\] {
   width: 15rem;
+}
+
+.w-full {
+  width: 100%;
 }
 
 .grid-cols-2 {
@@ -656,6 +649,10 @@ html {
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.file\:w-60::file-selector-button {
+  width: 15rem;
 }
 
 @media (min-width: 768px) {
