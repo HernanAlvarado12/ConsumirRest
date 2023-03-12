@@ -31,8 +31,8 @@ document.addEventListener('click', event => {
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    loadImage()
-    loadFavoriteImages()
+    //loadImage()
+    //loadFavoriteImages()
 })
 
 
