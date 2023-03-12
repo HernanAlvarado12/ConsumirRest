@@ -23,7 +23,7 @@ document.addEventListener('click', event => {
         saveFavoriteImage(target.getAttribute('data-id'))
     }else if(target.matches('button#deleteFavorite')) {
         deleteFavoriteImage(target.getAttribute('data-id'))
-    }else if(target.matches('#formSubmit')) {
+    }else if(target.matches('input[name ="submit"]')) {
         event.preventDefault()
         uploadPhoto()
     }
@@ -31,10 +31,21 @@ document.addEventListener('click', event => {
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    //loadImage()
-    //loadFavoriteImages()
+    loadImage()
+    loadFavoriteImages()
 })
 
+
+document.addEventListener('change', event => {
+    /**
+     * @type {Element}
+    */
+    const target = event.target
+    if(target.matches('#formFile')) {
+        const image = document.getElementById('formImage')
+        const inputFile = document.getElementById('formFile')
+    }
+})
 
 /**
  * @returns {void}
@@ -95,15 +106,20 @@ function deleteFavoriteImage(idImage) {
 }
 
 
+/**
+ * @returns {void}
+ */
 async function uploadPhoto() {
     const form = document.getElementById('formUpload')
     const formData = new FormData(form);
-    formData.forEach(entry => console.log(`key: ${entry}`))
     fetch(typeRequest.UPLOAD, {
         method: 'POST',
-        headers: { 'Content-Type': 'multipart/form-data', 'X-API-KEY': API_KEY },
+        headers: { 'X-API-KEY': API_KEY },
         body: formData
     })
+    .then(json => json.json())
+    .then(json => saveFavoriteImage(json.id))
+    .catch(error => error)
 }
 
 
